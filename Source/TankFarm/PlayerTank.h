@@ -10,20 +10,27 @@ UCLASS()
 class TANKFARM_API APlayerTank : public APawn
 {
 	GENERATED_BODY()
-
+	//------------------------------------------------ Fields Settings
+	
 public:
-	// Sets default values for this pawn's properties
-	APlayerTank();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveForwardSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") FVector2f aimSpeed;
 
+	//------------------------------------------------ Fields References
+
+	UStaticMeshComponent* turret = FindComponentByClass<UStaticMeshComponent>();
+	
+	//------------------------------------------------Methods
+public:
+	APlayerTank();
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+private:
+	void MoveForward(float input);
+	void AimX(float input);
+	void AimY(float input);
 };
