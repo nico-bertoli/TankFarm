@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "PlayerTank.generated.h"
 
+class USpringArmComponent;
+
 UCLASS()
 class TANKFARM_API APlayerTank : public APawn
 {
@@ -14,11 +16,14 @@ class TANKFARM_API APlayerTank : public APawn
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveForwardSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveTurnSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") FVector2f aimSpeed;
 
 	//------------------------------------------------ Fields References
 
-	UStaticMeshComponent* turret = FindComponentByClass<UStaticMeshComponent>();
+	UStaticMeshComponent* turret;
+	UStaticMeshComponent* base;
+	USpringArmComponent *cameraSpringArm;
 	
 	//------------------------------------------------Methods
 public:
@@ -31,6 +36,7 @@ protected:
 
 private:
 	void MoveForward(float input);
+	void MoveTurn(float input);
 	void AimX(float input);
 	void AimY(float input);
 };

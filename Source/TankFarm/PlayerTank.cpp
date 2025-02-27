@@ -1,7 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayerTank.h"
+
+#include "Camera/CameraComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
 APlayerTank::APlayerTank()
@@ -27,6 +30,7 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	//setup input
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerTank::MoveForward);
+	PlayerInputComponent->BindAxis("MoveTurn", this, &APlayerTank::MoveTurn);
 	PlayerInputComponent->BindAxis("AimX", this, &APlayerTank::AimX);
 	PlayerInputComponent->BindAxis("AimY", this, &APlayerTank::AimY);
 
@@ -35,25 +39,34 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	GetComponents<UStaticMeshComponent>(staticMeshComponents);
 	for (UStaticMeshComponent* meshComponent : staticMeshComponents)
 	{
-		if (meshComponent && meshComponent->ComponentHasTag(FName("Turret")))
+		if (meshComponent)
 		{
-			turret = meshComponent;
-			break;
+			if(meshComponent->ComponentHasTag(FName("Turret")))
+				turret = meshComponent;
+			if(meshComponent->ComponentHasTag(FName("Base")))
+				base = meshComponent;
 		}
 	}
+
+	cameraSpringArm = FindComponentByClass<USpringArmComponent>();
 }
 
 void APlayerTank::MoveForward(float input)
 {
 	float intensity = input * moveForwardSpeed;
-	UE_LOG(LogTemp, Log, TEXT("moving forward input: %f, intensity: %f"),input,intensity );
-	AddMovementInput(GetActorForwardVector(), intensity);
+	AddMovementInput(base->GetForwardVector(), intensity);
+}
+
+void APlayerTank::MoveTurn(float input)
+{
+	float intensity = input * moveTurnSpeed;
+	FQuat rotation = FQuat(FRotator(0.0f, intensity, 0.0f));
+	base->AddLocalRotation(rotation); 
 }
 
 void APlayerTank::AimX(float input)
 {
 	float intensity = input * aimSpeed.X;
-	UE_LOG(LogTemp, Log, TEXT("aiming x input: %f, intensity: %f"),input,intensity );
 	FQuat rotation = FQuat(FRotator(0.0f, intensity, 0.0f));
 	turret->AddLocalRotation(rotation); 
 }
@@ -61,6 +74,6 @@ void APlayerTank::AimX(float input)
 void APlayerTank::AimY(float input)
 {
 	float intensity = input * aimSpeed.Y;
-	UE_LOG(LogTemp, Log, TEXT("aiming y input: %f, intensity: %f"),input,intensity );
-	
+	FQuat rotation = FQuat(FRotator(intensity, 0.0f, 0.0f));
+	cameraSpringArm->AddLocalRotation(rotation); 
 }
