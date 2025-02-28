@@ -26,10 +26,16 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	//setup input
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	//movement
 	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerTank::MoveForward);
+	PlayerInputComponent->BindAxis("ActivateMoveForwardBoost", this, &APlayerTank::ActivateMoveForwardBoost);
 	PlayerInputComponent->BindAxis("MoveTurn", this, &APlayerTank::MoveTurn);
+
+	//aim
 	PlayerInputComponent->BindAxis("AimX", this, &APlayerTank::AimX);
 	PlayerInputComponent->BindAxis("AimY", this, &APlayerTank::AimY);
+	
 
 	//find turret
 	TArray<UStaticMeshComponent*> staticMeshComponents;
@@ -51,10 +57,21 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void APlayerTank::MoveForward(float input)
 {
 	float intensity = input * moveForwardSpeed;
+
+	//apply forward boost
+	if(GetWorld()->GetTimeSeconds() - lastTimePressedForwardMovementBoostButton < 0.1f)
+		intensity *= forwardMovementBoostMultiplier;
+	
 	AddMovementInput(base->GetForwardVector(), intensity);
 
 	if(input!=0)
 		lastTimeMovedForwardOrBackwards = GetWorld()->GetTimeSeconds();
+}
+
+void APlayerTank::ActivateMoveForwardBoost(float input)
+{
+	if(input != 0.0f)
+		lastTimePressedForwardMovementBoostButton = GetWorld()->GetTimeSeconds();
 }
 
 void APlayerTank::MoveTurn(float input)
@@ -82,3 +99,4 @@ void APlayerTank::AimY(float input)
 	FQuat rotation = FQuat(FRotator(intensity, 0.0f, 0.0f));
 	cameraSpringArm->AddLocalRotation(rotation); 
 }
+
