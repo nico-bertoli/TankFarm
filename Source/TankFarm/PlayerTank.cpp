@@ -14,7 +14,6 @@ APlayerTank::APlayerTank()
 
 void APlayerTank::BeginPlay()
 {
-	UE_LOG(LogTemp, Error, TEXT("BEGIN PLAY CALLED"));
 	Super::BeginPlay();
 }
 
@@ -25,8 +24,6 @@ void APlayerTank::Tick(float DeltaTime)
 
 void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	UE_LOG(LogTemp, Error, TEXT("SETUP CALLED"));
-
 	//setup input
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerTank::MoveForward);
@@ -55,11 +52,19 @@ void APlayerTank::MoveForward(float input)
 {
 	float intensity = input * moveForwardSpeed;
 	AddMovementInput(base->GetForwardVector(), intensity);
+
+	if(input!=0)
+		lastTimeMovedForwardOrBackwards = GetWorld()->GetTimeSeconds();
 }
 
 void APlayerTank::MoveTurn(float input)
 {
 	float intensity = input * moveTurnSpeed;
+
+	//faster turn when moving forward
+	if(GetWorld()->GetTimeSeconds() - lastTimeMovedForwardOrBackwards < 0.1)
+		intensity *= fasterTurnWhileMovingForwardMultiplier;
+	
 	FQuat rotation = FQuat(FRotator(0.0f, intensity, 0.0f));
 	base->AddLocalRotation(rotation); 
 }

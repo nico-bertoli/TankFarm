@@ -17,13 +17,18 @@ class TANKFARM_API APlayerTank : public APawn
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveForwardSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveTurnSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") FVector2f aimSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float fasterTurnWhileMovingForwardMultiplier;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") FVector2D aimSpeed;
 
 	//------------------------------------------------ Fields References
 
 	UStaticMeshComponent* turret;
 	UStaticMeshComponent* base;
 	USpringArmComponent *cameraSpringArm;
+
+	//------------------------------------------------ Fields Others
+
+	float lastTimeMovedForwardOrBackwards = -1;
 	
 	//------------------------------------------------Methods
 public:
