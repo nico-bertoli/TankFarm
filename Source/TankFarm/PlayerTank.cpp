@@ -96,7 +96,12 @@ void APlayerTank::AimX(float input)
 void APlayerTank::AimY(float input)
 {
 	float intensity = input * aimSpeed.Y;
-	FQuat rotation = FQuat(FRotator(intensity, 0.0f, 0.0f));
-	cameraSpringArm->AddLocalRotation(rotation); 
+	FRotator deltaRotation(intensity, 0.0f, 0.0f);
+	FRotator newRotation = cameraSpringArm->GetRelativeRotation() + deltaRotation;
+
+	// clamp new rotation
+	newRotation.Pitch = FMath::Clamp(newRotation.Pitch, minAimAngleY, maxAimAngleY);
+
+	cameraSpringArm->SetRelativeRotation(newRotation);
 }
 

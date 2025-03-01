@@ -17,7 +17,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveForwardSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveTurnSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float fasterTurnWhileMovingForwardMultiplier;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") FVector2D aimSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") FVector2D aimSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") float maxAimAngleY;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") float minAimAngleY;
 
 	//------------------------------------------------ Fields References
 private:
