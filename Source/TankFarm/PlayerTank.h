@@ -7,6 +7,7 @@
 #include "PlayerTank.generated.h"
 
 class USpringArmComponent;
+class UBoxComponent;
 
 UCLASS()
 class TANKFARM_API APlayerTank : public APawn
@@ -17,6 +18,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveForwardSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveTurnSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float fasterTurnWhileMovingForwardMultiplier;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float jumpIntensity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") FVector2D aimSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") float maxAimAngleY;
@@ -27,11 +29,15 @@ private:
 	UStaticMeshComponent* turret;
 	UStaticMeshComponent* base;
 	USpringArmComponent *cameraSpringArm;
+	UBoxComponent* groundContactDetector;
 
 	//------------------------------------------------ Fields Others
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (HideInEditor)) bool IsTouchingGround;
+private:
 	float lastTimeMovedForwardOrBackwards = -1;
 	float lastTimePressedForwardMovementBoostButton = -1;
-	
+	float lastTimeJumped = -1;
 	float forwardMovementBoostMultiplier = 2;
 	
 	//------------------------------------------------Methods
@@ -48,6 +54,7 @@ private:
 	void MoveForward(float input);
 	void ActivateMoveForwardBoost(float input);
 	void MoveTurn(float input);
+	void Jump(float input);
 
 	//aim
 	void AimX(float input);
