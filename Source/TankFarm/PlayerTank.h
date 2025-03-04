@@ -7,7 +7,6 @@
 #include "PlayerTank.generated.h"
 
 class USpringArmComponent;
-class UBoxComponent;
 
 UCLASS()
 class TANKFARM_API APlayerTank : public APawn
@@ -26,10 +25,10 @@ public:
 
 	//------------------------------------------------ Fields References
 private:
+	UStaticMeshComponent* root;
 	UStaticMeshComponent* turret;
 	UStaticMeshComponent* base;
 	USpringArmComponent *cameraSpringArm;
-	UBoxComponent* groundContactDetector;
 
 	//------------------------------------------------ Fields Others
 public:

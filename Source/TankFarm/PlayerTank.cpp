@@ -5,8 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Components/BoxComponent.h"
-
+#include <Components/BoxComponent.h>
 
 // Sets default values
 APlayerTank::APlayerTank()
@@ -51,35 +50,30 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	{
 		if (meshComponent)
 		{
+			if (meshComponent->ComponentHasTag(FName("Root")))
+				root = meshComponent;
 			if(meshComponent->ComponentHasTag(FName("Turret")))
 				turret = meshComponent;
 			if(meshComponent->ComponentHasTag(FName("Base")))
 				base = meshComponent;
-		}
-	}
-
-	//colliders
-	TArray<UBoxComponent*> boxColliders;
-	GetComponents<UBoxComponent>(boxColliders);
-	for (UBoxComponent* boxCollider : boxColliders)
-	{
-		if (boxCollider)
-		{
-			if (boxCollider->ComponentHasTag(FName("GroundContactDetector")))
-				groundContactDetector = boxCollider;
+			
 		}
 	}
 }
 
 void APlayerTank::MoveForward(float input)
 {
+	if (IsTouchingGround == false)
+		return;
+
 	float intensity = input * moveForwardSpeed;
 
 	//apply forward boost
 	if(GetWorld()->GetTimeSeconds() - lastTimePressedForwardMovementBoostButton < 0.1f)
 		intensity *= forwardMovementBoostMultiplier;
 	
-	AddMovementInput(base->GetForwardVector(), intensity);
+	UE_LOG(LogTemp, Display, TEXT("adding forward force: %f"),intensity);
+	root->AddForce(base->GetForwardVector() * intensity);
 
 	if(input!=0)
 		lastTimeMovedForwardOrBackwards = GetWorld()->GetTimeSeconds();
@@ -105,13 +99,14 @@ void APlayerTank::MoveTurn(float input)
 
 void APlayerTank::Jump(float input)
 {
-	if (input != 0 && IsTouchingGround && GetWorld()->GetTimeSeconds() - lastTimeJumped > 0.5f )
+	//bool canJump = GetWorld()->GetTimeSeconds() - lastTimeJumped > 0.1f;
+	if (input != 0 && IsTouchingGround)
 	{
-		UE_LOG(LogTemp, Display, TEXT("JUMPING"));
-		AddMovementInput(base->GetUpVector(), jumpIntensity,true);
+		base->AddImpulse(FVector(0, 0, jumpIntensity), NAME_None, true);
 		lastTimeJumped = GetWorld()->GetTimeSeconds();
 	}
 }
+
 
 void APlayerTank::AimX(float input)
 {
