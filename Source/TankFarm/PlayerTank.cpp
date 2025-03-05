@@ -66,35 +66,44 @@ void APlayerTank::MoveForward(float input)
 	if (IsTouchingGround == false)
 		return;
 
-	float intensity = input * moveForwardAcceleration;
-
-	//apply forward boost
-	if(IsForwardBoostEnabled())
-		intensity *= forwardMovementBoostMultiplier;
-
-	//todo would be better to use add force but it's not working for some reason
-	if(HasReachedMaxSpeedXY() == false)
-		root->AddImpulse(base->GetForwardVector() * intensity);
-
 	if(input!=0)
 		lastTimeMovedForwardOrBackwards = GetWorld()->GetTimeSeconds();
+
+	float intensity = input * moveForwardAcceleration;
+	
+	if(IsForwardBoostEnabled())
+		intensity *= forwardMovementBoostMultiplier;
+	
+	if(HasReachedMaxSpeedXY() == false)
+		root->AddImpulse(base->GetForwardVector() * intensity);	//todo would be better to use add force but it's not working for some reason
+	
+	ComputeSliding();
 }
 
-	bool APlayerTank::HasReachedMaxSpeedXY() const
-	{
-		FVector originalSpeed = root->GetPhysicsLinearVelocity();
-		FVector xySpeed = originalSpeed;
+void APlayerTank::ComputeSliding() const
+{
+	FVector forwardDirection = base->GetForwardVector();
+	FVector xySpeed = GetXYSpeed();  // Replace WheelComponent with your actual component
+	FVector forwardSpeed = FVector::DotProduct(xySpeed, forwardDirection) * forwardDirection;
+	FVector sideSpeed = xySpeed - forwardSpeed;  // This is the velocity that's not aligned with forward
 	
-		xySpeed.Z = 0;
-	
-		return xySpeed.Size() > GetCurrentMaxSpeed();
-	}
+	sideSpeed *= slidingMultiplier;
+	FVector computedSlidingSpeed = forwardSpeed + sideSpeed;
+	root->SetPhysicsLinearVelocity(FVector(computedSlidingSpeed.X,computedSlidingSpeed.Y,root->GetPhysicsLinearVelocity().Z));
+}
 
-	void APlayerTank::ActivateMoveForwardBoost(float input)
-	{
-		if(input != 0.0f)
-			lastTimePressedForwardMovementBoostButton = GetWorld()->GetTimeSeconds();
-	}
+FVector APlayerTank::GetXYSpeed() const
+{
+	FVector xySpeed = root->GetPhysicsLinearVelocity();
+	xySpeed.Z = 0;
+	return xySpeed;
+}
+
+void APlayerTank::ActivateMoveForwardBoost(float input)
+{
+	if(input != 0.0f)
+		lastTimePressedForwardMovementBoostButton = GetWorld()->GetTimeSeconds();
+}
 
 void APlayerTank::MoveTurn(float input)
 {

@@ -19,6 +19,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveTurnSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float fasterTurnWhileMovingForwardMultiplier;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float slidingMultiplier;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float forwardMovementBoostMultiplier = 2;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float jumpIntensity;
@@ -57,12 +58,15 @@ private:
 	void ActivateMoveForwardBoost(float input);
 	void MoveTurn(float input);
 	void Jump(float input);
+	void ComputeSliding() const;
 
 	//aim
 	void AimX(float input);
 	void AimY(float input);
 
-	bool HasReachedMaxSpeedXY() const;
+	// getters
+	bool HasReachedMaxSpeedXY() const {return GetXYSpeed().Size() > GetCurrentMaxSpeed();}
 	float GetCurrentMaxSpeed() const {return IsForwardBoostEnabled() ? maxSpeed * forwardMovementBoostMultiplier : maxSpeed;}
 	bool IsForwardBoostEnabled() const {return GetWorld()->GetTimeSeconds() - lastTimePressedForwardMovementBoostButton < 0.1f;}
+	FVector GetXYSpeed() const;
 };
