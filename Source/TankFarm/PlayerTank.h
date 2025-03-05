@@ -64,6 +64,9 @@ private:
 	void AimX(float input);
 	void AimY(float input);
 
+	//fire
+	void Fire(float input);
+
 	// getters
 	bool HasReachedMaxSpeedXY() const {return GetXYSpeed().Size() > GetCurrentMaxSpeed();}
 	float GetCurrentMaxSpeed() const {return IsForwardBoostEnabled() ? maxSpeed * forwardMovementBoostMultiplier : maxSpeed;}

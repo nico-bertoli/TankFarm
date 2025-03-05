@@ -37,6 +37,9 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("AimX", this, &APlayerTank::AimX);
 	PlayerInputComponent->BindAxis("AimY", this, &APlayerTank::AimY);
 	PlayerInputComponent->BindAxis("Jump", this, &APlayerTank::Jump);
+
+	//fire
+	PlayerInputComponent->BindAxis("Fire", this, &APlayerTank::Fire);
 	
 
 	//---------------------------- find components
@@ -86,8 +89,6 @@ void APlayerTank::ComputeSliding() const
 	FVector xySpeed = GetXYSpeed();  // Replace WheelComponent with your actual component
 	FVector forwardSpeed = FVector::DotProduct(xySpeed, forwardDirection) * forwardDirection;
 	FVector sideSpeed = xySpeed - forwardSpeed;  // This is the velocity that's not aligned with forward
-	
-	UE_LOG(LogTemp, Warning, TEXT("side speed: %f"),sideSpeed.Size());
 	
 	sideSpeed *= slidingMultiplier;
 	FVector computedSlidingSpeed = forwardSpeed + sideSpeed;
@@ -149,3 +150,10 @@ void APlayerTank::AimY(float input)
 	cameraSpringArm->SetRelativeRotation(newRotation);
 }
 
+void APlayerTank::Fire(float input)
+{
+	if(input != 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FIRE"));
+	}
+}
