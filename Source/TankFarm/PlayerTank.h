@@ -14,9 +14,13 @@ class TANKFARM_API APlayerTank : public APawn
 	GENERATED_BODY()
 	//------------------------------------------------ Fields Settings
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveForwardSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveForwardAcceleration;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float maxSpeed;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveTurnSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float fasterTurnWhileMovingForwardMultiplier;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float forwardMovementBoostMultiplier = 2;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float jumpIntensity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") FVector2D aimSpeed;
@@ -37,7 +41,6 @@ private:
 	float lastTimeMovedForwardOrBackwards = -1;
 	float lastTimePressedForwardMovementBoostButton = -1;
 	float lastTimeJumped = -1;
-	float forwardMovementBoostMultiplier = 2;
 	
 	//------------------------------------------------Methods
 public:
@@ -58,4 +61,8 @@ private:
 	//aim
 	void AimX(float input);
 	void AimY(float input);
+
+	bool HasReachedMaxSpeedXY() const;
+	float GetCurrentMaxSpeed() const {return IsForwardBoostEnabled() ? maxSpeed * forwardMovementBoostMultiplier : maxSpeed;}
+	bool IsForwardBoostEnabled() const {return GetWorld()->GetTimeSeconds() - lastTimePressedForwardMovementBoostButton < 0.1f;}
 };

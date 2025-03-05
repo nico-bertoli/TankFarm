@@ -66,24 +66,35 @@ void APlayerTank::MoveForward(float input)
 	if (IsTouchingGround == false)
 		return;
 
-	float intensity = input * moveForwardSpeed;
+	float intensity = input * moveForwardAcceleration;
 
 	//apply forward boost
-	if(GetWorld()->GetTimeSeconds() - lastTimePressedForwardMovementBoostButton < 0.1f)
+	if(IsForwardBoostEnabled())
 		intensity *= forwardMovementBoostMultiplier;
-	
-	UE_LOG(LogTemp, Display, TEXT("adding forward force: %f"),intensity);
-	root->AddForce(base->GetForwardVector() * intensity);
+
+	//todo would be better to use add force but it's not working for some reason
+	if(HasReachedMaxSpeedXY() == false)
+		root->AddImpulse(base->GetForwardVector() * intensity);
 
 	if(input!=0)
 		lastTimeMovedForwardOrBackwards = GetWorld()->GetTimeSeconds();
 }
 
-void APlayerTank::ActivateMoveForwardBoost(float input)
-{
-	if(input != 0.0f)
-		lastTimePressedForwardMovementBoostButton = GetWorld()->GetTimeSeconds();
-}
+	bool APlayerTank::HasReachedMaxSpeedXY() const
+	{
+		FVector originalSpeed = root->GetPhysicsLinearVelocity();
+		FVector xySpeed = originalSpeed;
+	
+		xySpeed.Z = 0;
+	
+		return xySpeed.Size() > GetCurrentMaxSpeed();
+	}
+
+	void APlayerTank::ActivateMoveForwardBoost(float input)
+	{
+		if(input != 0.0f)
+			lastTimePressedForwardMovementBoostButton = GetWorld()->GetTimeSeconds();
+	}
 
 void APlayerTank::MoveTurn(float input)
 {
@@ -102,7 +113,7 @@ void APlayerTank::Jump(float input)
 	//bool canJump = GetWorld()->GetTimeSeconds() - lastTimeJumped > 0.1f;
 	if (input != 0 && IsTouchingGround)
 	{
-		base->AddImpulse(FVector(0, 0, jumpIntensity), NAME_None, true);
+		root->AddImpulse(FVector(0, 0, jumpIntensity), NAME_None, true);
 		lastTimeJumped = GetWorld()->GetTimeSeconds();
 	}
 }
