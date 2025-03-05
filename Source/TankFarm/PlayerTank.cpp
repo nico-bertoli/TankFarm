@@ -87,6 +87,8 @@ void APlayerTank::ComputeSliding() const
 	FVector forwardSpeed = FVector::DotProduct(xySpeed, forwardDirection) * forwardDirection;
 	FVector sideSpeed = xySpeed - forwardSpeed;  // This is the velocity that's not aligned with forward
 	
+	UE_LOG(LogTemp, Warning, TEXT("side speed: %f"),sideSpeed.Size());
+	
 	sideSpeed *= slidingMultiplier;
 	FVector computedSlidingSpeed = forwardSpeed + sideSpeed;
 	root->SetPhysicsLinearVelocity(FVector(computedSlidingSpeed.X,computedSlidingSpeed.Y,root->GetPhysicsLinearVelocity().Z));
