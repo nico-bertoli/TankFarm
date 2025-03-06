@@ -24,8 +24,8 @@ void AProjectile::BeginPlay()
 				root = meshComponent;
 		}
 	}
+	
 	ensure(root != nullptr);
-
 	root->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 

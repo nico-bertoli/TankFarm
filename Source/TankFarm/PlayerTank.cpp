@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayerTank.h"
-
 #include "Camera/CameraComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -172,7 +171,9 @@ void APlayerTank::Fire(float input)
 {
 	if(input != 0)
 	{
-		if(GetWorld()->GetTimeSeconds() - lastProjectileShotTime > 1.0f) //todo remove hardcoded delay
+		float rateoDelay = Cast<AProjectile>(currentBullet->GetDefaultObject())->rateoDelay;
+		
+		if(GetWorld()->GetTimeSeconds() - lastProjectileShotTime > rateoDelay)
 		{
 			AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>
 			(
