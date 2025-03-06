@@ -14,7 +14,8 @@ class TANKFARM_API AProjectile : public AActor
 	//------------------------------------------------ Fields Settings
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float shotImpulse;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float rateoDelay;
+	
 	UStaticMeshComponent* root;
 
 	//------------------------------------------------Methods
@@ -26,6 +27,9 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	void Shot(FVector startingPosition ,FVector direction);
+	void Shot();
+	
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 };

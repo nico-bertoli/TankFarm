@@ -7,6 +7,7 @@
 #include "PlayerTank.generated.h"
 
 class USpringArmComponent;
+class AProjectile;
 
 UCLASS()
 class TANKFARM_API APlayerTank : public APawn
@@ -28,12 +29,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") float maxAimAngleY;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") float minAimAngleY;
 
+	UPROPERTY(EditAnywhere, Category="Shoot")
+	TSubclassOf<class AProjectile> currentBullet;
+
 	//------------------------------------------------ Fields References
 private:
 	UStaticMeshComponent* root;
 	UStaticMeshComponent* turret;
 	UStaticMeshComponent* base;
 	USpringArmComponent *cameraSpringArm;
+	USceneComponent* spawnProjectilePosition;
 
 	//------------------------------------------------ Fields Others
 public:
@@ -42,6 +47,7 @@ private:
 	float lastTimeMovedForwardOrBackwards = -1;
 	float lastTimePressedForwardMovementBoostButton = -1;
 	float lastTimeJumped = -1;
+	float lastProjectileShotTime = -1;
 	
 	//------------------------------------------------Methods
 public:

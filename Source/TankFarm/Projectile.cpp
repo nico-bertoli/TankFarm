@@ -24,6 +24,9 @@ void AProjectile::BeginPlay()
 				root = meshComponent;
 		}
 	}
+	ensure(root != nullptr);
+
+	root->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
 void AProjectile::Tick(float DeltaTime)
@@ -32,12 +35,17 @@ void AProjectile::Tick(float DeltaTime)
 	SetActorRotation(root->GetPhysicsLinearVelocity().Rotation());
 }
 
-void AProjectile::Shot(FVector startingPosition, FVector direction)
+void AProjectile::Shot()
 {
-	direction.Normalize();
-	SetActorLocation(startingPosition);
-	SetActorRotation(direction.Rotation());
-	root->AddImpulse(shotImpulse * direction);
+	root->AddImpulse(shotImpulse * GetActorForwardVector());
 }
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("hit"));
+	if (OtherActor && OtherActor != this)
+		Destroy();
+}
+
 
 

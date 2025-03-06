@@ -5,7 +5,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/SpringArmComponent.h"
-#include <Components/BoxComponent.h>
+#include "Projectile.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 APlayerTank::APlayerTank()
@@ -45,6 +46,7 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	//---------------------------- find components
 
 	cameraSpringArm = FindComponentByClass<USpringArmComponent>();
+	ensure(cameraSpringArm != nullptr);
 
 	//meshes
 	TArray<UStaticMeshComponent*> staticMeshComponents;
@@ -62,6 +64,22 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 			
 		}
 	}
+	ensure(root != nullptr);
+	ensure(turret != nullptr);
+	ensure(base != nullptr);
+
+	//scene component
+	TArray<USceneComponent*> sceneComponents;
+	GetComponents<USceneComponent>(sceneComponents);
+	for (USceneComponent* sceneComponent : sceneComponents)
+	{
+		if (sceneComponent)
+		{
+			if (sceneComponent->ComponentHasTag(FName("SpawnProjectilePosition")))
+				spawnProjectilePosition = sceneComponent;
+		}
+	}
+	ensure(spawnProjectilePosition != nullptr);
 }
 
 void APlayerTank::MoveForward(float input)
@@ -154,6 +172,18 @@ void APlayerTank::Fire(float input)
 {
 	if(input != 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("FIRE"));
+		if(GetWorld()->GetTimeSeconds() - lastProjectileShotTime > 1.0f) //todo remove hardcoded delay
+		{
+			AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>
+			(
+				currentBullet,
+				spawnProjectilePosition->GetComponentLocation(),
+				spawnProjectilePosition->GetComponentRotation()
+			);
+			projectile->Shot();
+			lastProjectileShotTime = GetWorld()->GetTimeSeconds();
+			
+			UE_LOG(LogTemp, Warning, TEXT("FIRE"));
+		}
 	}
 }
