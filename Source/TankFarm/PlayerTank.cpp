@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "PlayerTank.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
@@ -7,7 +5,6 @@
 #include "Projectile.h"
 #include "Components/BoxComponent.h"
 
-// Sets default values
 APlayerTank::APlayerTank()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -171,7 +168,7 @@ void APlayerTank::Fire(float input)
 {
 	if(input != 0)
 	{
-		float rateoDelay = Cast<AProjectile>(currentBullet->GetDefaultObject())->rateoDelay;
+		float rateoDelay = Cast<AProjectile>(currentBullet->GetDefaultObject())->GetRateoDelay();
 		
 		if(GetWorld()->GetTimeSeconds() - lastProjectileShotTime > rateoDelay)
 		{

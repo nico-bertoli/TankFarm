@@ -1,7 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
-
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerTank.generated.h"
@@ -14,22 +11,22 @@ class TANKFARM_API APlayerTank : public APawn
 {
 	GENERATED_BODY()
 	//------------------------------------------------ Fields Settings
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveForwardAcceleration;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float maxSpeed;
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float moveForwardAcceleration;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float maxSpeed;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float moveTurnSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float fasterTurnWhileMovingForwardMultiplier;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float slidingMultiplier;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float moveTurnSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float fasterTurnWhileMovingForwardMultiplier;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float slidingMultiplier;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float forwardMovementBoostMultiplier = 2;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float jumpIntensity;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float forwardMovementBoostMultiplier = 2;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float jumpIntensity;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") FVector2D aimSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") float maxAimAngleY;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim") float minAimAngleY;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim", meta = (AllowPrivateAccess = "true")) FVector2D aimSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim", meta = (AllowPrivateAccess = "true")) float maxAimAngleY;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim", meta = (AllowPrivateAccess = "true")) float minAimAngleY;
 
-	UPROPERTY(EditAnywhere, Category="Shoot")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shooting", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> currentBullet;
 
 	//------------------------------------------------ Fields References
@@ -40,14 +37,13 @@ private:
 	USpringArmComponent *cameraSpringArm;
 	USceneComponent* spawnProjectilePosition;
 
-	//------------------------------------------------ Fields Others
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (HideInEditor)) bool IsTouchingGround;
+	//------------------------------------------------ Fields
 private:
 	float lastTimeMovedForwardOrBackwards = -1;
 	float lastTimePressedForwardMovementBoostButton = -1;
 	float lastTimeJumped = -1;
 	float lastProjectileShotTime = -1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting", meta = (AllowPrivateAccess = "true")) bool IsTouchingGround;
 	
 	//------------------------------------------------Methods
 public:

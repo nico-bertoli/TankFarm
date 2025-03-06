@@ -1,7 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
-
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
@@ -11,10 +8,10 @@ class TANKFARM_API AProjectile : public AActor
 {
 	GENERATED_BODY()
 	
-	//------------------------------------------------ Fields Settings
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float shotImpulse;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement") float rateoDelay;
+	//------------------------------------------------ Fields
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float shotImpulse;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float rateoDelay;
 	
 	UStaticMeshComponent* root;
 
@@ -28,6 +25,7 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 	void Shot();
+	float GetRateoDelay()const {return rateoDelay;}
 	
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
