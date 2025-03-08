@@ -3,7 +3,6 @@
 AProjectile::AProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
 }
 
 void AProjectile::BeginPlay()

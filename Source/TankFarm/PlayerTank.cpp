@@ -18,6 +18,7 @@ void APlayerTank::BeginPlay()
 void APlayerTank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	HandleGravity();
 }
 
 void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -78,6 +79,16 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	ensure(spawnProjectilePosition != nullptr);
 }
 
+void APlayerTank::HandleGravity() const
+{
+	if(IsTouchingGround == false)
+	{
+		UE_LOG(LogTemp, Log, TEXT("gravity: %f"), GetCurrentGravity());
+		root->AddForce(FVector(0,0,-GetCurrentGravity() * root->GetMass()));
+	}
+		
+}
+
 void APlayerTank::MoveForward(float input)
 {
 	if (IsTouchingGround == false)
@@ -136,14 +147,15 @@ void APlayerTank::MoveTurn(float input)
 
 void APlayerTank::Jump(float input)
 {
-	//bool canJump = GetWorld()->GetTimeSeconds() - lastTimeJumped > 0.1f;
-	if (input != 0 && IsTouchingGround)
+	if (input != 0)
 	{
-		root->AddImpulse(FVector(0, 0, jumpIntensity), NAME_None, true);
-		lastTimeJumped = GetWorld()->GetTimeSeconds();
+		lastTimePressedJump = GetWorld()->GetTimeSeconds();
+		if(IsTouchingGround)
+		{
+			root->AddImpulse(FVector(0, 0, jumpIntensity), NAME_None, true);
+		}
 	}
 }
-
 
 void APlayerTank::AimX(float input)
 {
@@ -181,7 +193,8 @@ void APlayerTank::Fire(float input)
 			projectile->Shot();
 			lastProjectileShotTime = GetWorld()->GetTimeSeconds();
 			
-			UE_LOG(LogTemp, Warning, TEXT("FIRE"));
+			UE_LOG(LogTemp, Log, TEXT("FIRE"));
 		}
 	}
 }
+
