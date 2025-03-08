@@ -81,12 +81,10 @@ void APlayerTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void APlayerTank::HandleGravity() const
 {
-	FVector currentSpeed = root->GetPhysicsLinearVelocity();
-
 	if(IsTouchingGround == false)
 	{
 		UE_LOG(LogTemp, Log, TEXT("gravity: %f"), GetCurrentGravity());
-		root->AddForce(FVector(currentSpeed.X,currentSpeed.Y,-GetCurrentGravity()));
+		root->AddForce(FVector(0,0,-GetCurrentGravity() * root->GetMass()));
 	}
 		
 }
