@@ -26,6 +26,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim", meta = (AllowPrivateAccess = "true")) float maxAimAngleY;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aim", meta = (AllowPrivateAccess = "true")) float minAimAngleY;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CustomGravity", meta = (AllowPrivateAccess = "true")) float defaultGravity;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CustomGravity", meta = (AllowPrivateAccess = "true")) float gravityWhileJumping;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shooting", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> currentBullet;
 
@@ -41,7 +44,7 @@ private:
 private:
 	float lastTimeMovedForwardOrBackwards = -1;
 	float lastTimePressedForwardMovementBoostButton = -1;
-	float lastTimeJumped = -1;
+	float lastTimePressedJump = -1;
 	float lastProjectileShotTime = -1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting", meta = (AllowPrivateAccess = "true")) bool IsTouchingGround;
 	
@@ -53,7 +56,7 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-
+	
 private:
 	//move
 	void MoveForward(float input);
@@ -61,6 +64,8 @@ private:
 	void MoveTurn(float input);
 	void Jump(float input);
 	void ComputeSliding() const;
+	void HandleGravity() const;
+	float GetCurrentGravity() const {return GetWorld()->GetTimeSeconds() - lastTimePressedJump < 0.1f ? gravityWhileJumping : defaultGravity;}
 
 	//aim
 	void AimX(float input);
