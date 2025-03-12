@@ -86,7 +86,6 @@ void APlayerTank::HandleGravity() const
 		UE_LOG(LogTemp, Log, TEXT("gravity: %f"), GetCurrentGravity());
 		root->AddForce(FVector(0,0,-GetCurrentGravity() * root->GetMass()));
 	}
-		
 }
 
 void APlayerTank::MoveForward(float input)

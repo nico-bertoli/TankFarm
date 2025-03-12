@@ -1,7 +1,14 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
+
 #include "Projectile.generated.h"
+
+// class UNiagaraSystem;
+
 
 UCLASS()
 class TANKFARM_API AProjectile : public AActor
@@ -12,6 +19,8 @@ class TANKFARM_API AProjectile : public AActor
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float shotImpulse;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true")) float rateoDelay;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	UNiagaraSystem* fxHit;
 	
 	UStaticMeshComponent* root;
 
