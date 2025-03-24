@@ -1,5 +1,6 @@
 #include "Enemy.h"
-// #include "Components/SkeletalMeshComponent.h"
+
+#include "Components/CapsuleComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -10,20 +11,13 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TArray<USkeletalMeshComponent*> skeletalMeshComponents;
-	GetComponents<USkeletalMeshComponent>(skeletalMeshComponents);
-	for (USkeletalMeshComponent* skeletalMeshComp : skeletalMeshComponents)
-	{
-		if (skeletalMeshComp)
-		{
-			if (skeletalMeshComp->ComponentHasTag(FName("Root")))
-				root = skeletalMeshComp;
-		}
-	}
+	root = FindComponentByClass<USkeletalMeshComponent>();
+	collider = FindComponentByClass<UCapsuleComponent>();
 	
 	ensure(root != nullptr);
-	root->OnComponentHit.AddDynamic(this, &AEnemy::OnHit);
+	ensure(collider != nullptr);
 	
+	collider->OnComponentHit.AddDynamic(this, &AEnemy::OnHit);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -40,9 +34,10 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	UE_LOG(LogTemp, Warning, TEXT("enemy hit!"));
+	
 	if (OtherActor && OtherActor != this)
 	{
-		UE_LOG(LogTemp, Log, TEXT("hit"));
 		Destroy();
 	}
 		

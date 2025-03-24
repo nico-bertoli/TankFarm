@@ -1,5 +1,7 @@
 #include "Projectile.h"
 
+#include "Components/CapsuleComponent.h"
+
 AProjectile::AProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -9,20 +11,13 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//meshes
-	TArray<UStaticMeshComponent*> staticMeshComponents;
-	GetComponents<UStaticMeshComponent>(staticMeshComponents);
-	for (UStaticMeshComponent* meshComponent : staticMeshComponents)
-	{
-		if (meshComponent)
-		{
-			if (meshComponent->ComponentHasTag(FName("Root")))
-				root = meshComponent;
-		}
-	}
+	root = FindComponentByClass<UStaticMeshComponent>();
+	collider = FindComponentByClass<UCapsuleComponent>();
 	
 	ensure(root != nullptr);
-	root->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+	ensure(collider != nullptr);
+	
+	collider->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
 void AProjectile::Tick(float DeltaTime)
@@ -40,7 +35,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 {
 	if (OtherActor && OtherActor != this)
 	{
-		UE_LOG(LogTemp, Log, TEXT("hit"));
+		UE_LOG(LogTemp, Warning, TEXT("bullet hit!"));
 		
 		// GetWorld()->SpawnActor<AProjectile>
 		// (

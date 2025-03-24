@@ -4,6 +4,8 @@
 #include "GameFramework/Pawn.h"
 #include "Enemy.generated.h"
 
+class UCapsuleComponent;
+
 UCLASS()
 class TANKFARM_API AEnemy : public APawn
 {
@@ -11,6 +13,7 @@ class TANKFARM_API AEnemy : public APawn
 
 	//------------------------------------------------ Fields
 	USkeletalMeshComponent* root;
+	UCapsuleComponent* collider;
 	
 	//------------------------------------------------ Methods
 

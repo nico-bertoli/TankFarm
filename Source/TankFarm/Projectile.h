@@ -9,6 +9,7 @@
 
 // class UNiagaraSystem;
 
+class UCapsuleComponent;
 
 UCLASS()
 class TANKFARM_API AProjectile : public AActor
@@ -23,6 +24,7 @@ private:
 	UNiagaraSystem* fxHit;
 	
 	UStaticMeshComponent* root;
+	UCapsuleComponent* collider;
 
 	//------------------------------------------------Methods
 public:	
