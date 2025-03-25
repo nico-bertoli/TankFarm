@@ -7,8 +7,6 @@
 
 #include "Projectile.generated.h"
 
-// class UNiagaraSystem;
-
 class UCapsuleComponent;
 
 UCLASS()

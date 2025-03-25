@@ -34,12 +34,9 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("enemy hit!"));
-	
-	if (OtherActor && OtherActor != this)
+	if(OtherActor->Tags.Contains("PlayerProjectile"))
 	{
 		Destroy();
 	}
-		
 }
 
