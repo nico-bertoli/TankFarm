@@ -83,7 +83,6 @@ void APlayerTank::HandleGravity() const
 {
 	if(IsTouchingGround == false)
 	{
-		UE_LOG(LogTemp, Log, TEXT("gravity: %f"), GetCurrentGravity());
 		root->AddForce(FVector(0,0,-GetCurrentGravity() * root->GetMass()));
 	}
 }
@@ -191,8 +190,6 @@ void APlayerTank::Fire(float input)
 			);
 			projectile->Shot();
 			lastProjectileShotTime = GetWorld()->GetTimeSeconds();
-			
-			UE_LOG(LogTemp, Log, TEXT("FIRE"));
 		}
 	}
 }
